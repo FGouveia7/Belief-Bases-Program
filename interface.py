@@ -256,12 +256,9 @@ def mostrar_resultados(premissas, formula_alvo, contexto):
         print(Fore.RED + "  none")
 
     print(Style.BRIGHT + "\nPossible outcomes of a kernel contraction:")
-    if resultado_full_meet:
-        kernel = encontra_subconjuntos_maximais_com_subconjunto(
-            premissas, resultado_full_meet, formula_alvo
-        )
-    else:
-        kernel = []
+    kernel = encontra_subconjuntos_maximais_com_subconjunto(
+        premissas, resultado_full_meet, formula_alvo
+    )
     if kernel:
         for s in kernel:
             print(Fore.GREEN + f"  {formata_conjunto(s)}")
