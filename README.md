@@ -57,12 +57,11 @@ python main.py
 
 The project is organized into several modules, each responsible for a specific part of the application:
 
-* **`main.py`** — Main entry point of the application.
-* **`interface.py`** — Handles the command-line interface and user interaction.
-* **`motor_logico.py`** — Implements the logical inference engine and reasoning rules.
-* **`operacoes_conjuntos.py`** — Provides operations for manipulating sets and belief bases.
-* **`parser_formulas.py`** — Parses and transforms logical formulas into representations that can be processed by the Z3 engine.
-* **`main.spec`** — PyInstaller specification file used to configure executable generation.
+* **`main.py`** - Main entry point of the application.
+* **`interface.py`** - Handles the command-line interface and user interaction.
+* **`motor_logico.py`** - Implements the logical inference engine and reasoning rules.
+* **`operacoes_conjuntos.py`** - Provides operations for manipulating sets and belief bases.
+* **`parser_formulas.py`** - Parses and transforms logical formulas into representations that can be processed by the Z3 engine.
 
 ## Contribution
 
