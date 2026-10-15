@@ -87,8 +87,31 @@ As dependências estão separadas por finalidade:
 | Ficheiro | Finalidade |
 | --- | --- |
 | `requirements.txt` | Execução: Z3 e cores do terminal |
-| `requirements-dev.txt` | Execução e Ruff |
 | `requirements-build.txt` | Execução e PyInstaller `>=6.11,<7` |
+
+## Gerar um executável
+
+Com o ambiente virtual já criado, use os seguintes comandos em Windows
+(PowerShell):
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-build.txt
+.\.venv\Scripts\python.exe -m PyInstaller --clean --onefile --collect-binaries z3 --name BeliefBasesProgram-refatorado main.py
+```
+
+O novo executável será gerado em `dist/BeliefBasesProgram-refatorado.exe`.
+Pode abri-lo diretamente ou executá-lo no PowerShell:
+
+```powershell
+.\dist\BeliefBasesProgram-refatorado.exe
+```
+
+Após alterações ao código-fonte, gere um novo executável para o atualizar.
+A opção `--collect-binaries z3` inclui as bibliotecas nativas do Z3,
+necessárias para carregar o motor de inferência. Confirme o arranque e uma
+análise completa no executável gerado.
+
+Referência da ferramenta: [manual oficial do PyInstaller](https://pyinstaller.org/en/latest/).
 
 ## Sintaxe das fórmulas
 
@@ -244,10 +267,7 @@ para comparar conjuntos.
 │       ├── entrada.py
 │       ├── apresentacao.py
 │       └── menu.py
-├── scripts/
-│   └── benchmark_analise.py
 ├── requirements.txt
-├── requirements-dev.txt
 ├── requirements-build.txt
 ├── RelatorioBelifBases.pdf
 └── BeliefBasesProgram-refatorado.exe
@@ -276,47 +296,6 @@ Estão disponíveis partial meet, full meet, kernel, smooth kernel, basic
 AGM-generated base contraction e bounded contraction (contração limitada),
 além da família de resultados possíveis de base contraction. A fundamentação
 e as convenções matemáticas seguem o [PDF original](RelatorioBelifBases.pdf).
-
-## Desenvolvimento
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
-.\.venv\Scripts\python.exe -m ruff check --target-version py310 --line-length 88 --select E,F,I,UP,B main.py belief_bases scripts
-.\.venv\Scripts\python.exe -m ruff format --check --target-version py310 --line-length 88 main.py belief_bases scripts
-```
-
-Em Linux/macOS, substitua `.\.venv\Scripts\python.exe` por
-`./.venv/bin/python` nos comandos de desenvolvimento.
-
-Para medir uma análise de seis premissas e a seleção posterior de B:
-
-```powershell
-.\.venv\Scripts\python.exe -m scripts.benchmark_analise
-```
-
-O script apresenta tempos e contagens de chamadas a `Solver.check`. Os
-tempos dependem da máquina; as contagens permitem comparar a quantidade de
-inferência realizada. Estes números medem desempenho, não a correção dos
-resultados.
-
-## Gerar um executável
-
-No sistema de destino, com o ambiente virtual já criado, use o respetivo
-Python. Em Windows (PowerShell):
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements-build.txt
-.\.venv\Scripts\python.exe -m PyInstaller --clean --onefile --collect-binaries z3 --name BeliefBasesProgram-refatorado main.py
-```
-
-Em Windows, o novo executável será gerado em
-`dist/BeliefBasesProgram-refatorado.exe`. Existe também uma cópia do
-executável validado na raiz. Após alterações ao código-fonte, gere um novo
-executável para o atualizar. A opção `--collect-binaries z3` inclui as
-bibliotecas nativas do Z3, necessárias para carregar o motor de inferência.
-Confirme o arranque e uma análise completa no executável gerado.
-
-Referência da ferramenta: [manual oficial do PyInstaller](https://pyinstaller.org/en/latest/).
 
 ## Desempenho e limites
 

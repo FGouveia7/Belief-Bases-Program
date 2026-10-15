@@ -1,7 +1,7 @@
 build/
 dist/
 __pycache__/
-main.spec
+*.spec
 .venv*/
 .uv-cache/
 .python-runtimes/
