@@ -6,23 +6,81 @@ permite introduzir uma base, escolher uma fórmula a contrair e consultar os
 resultados possíveis dos operadores descritos no
 [relatório teórico](RelatorioBelifBases.pdf).
 
-## Requisitos e instalação
+## Como executar o projeto
 
 É necessário Python **3.10 ou superior**. As dependências de execução são
 `z3-solver` e `colorama`; `itertools`, `re` e as restantes ferramentas da
 biblioteca padrão já acompanham o Python.
 
-Na pasta do projeto, em PowerShell:
+Clone o repositório e entre na pasta do projeto:
+
+```text
+git clone https://github.com/FGouveia7/Belief-Bases-Program.git
+cd Belief-Bases-Program
+```
+
+Se já tem o projeto no computador, abra um terminal na pasta que contém
+`main.py` e `requirements.txt`.
+
+### Windows (PowerShell)
+
+Na primeira execução, crie o ambiente virtual, instale as dependências e
+inicie a aplicação:
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python main.py
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe main.py
 ```
 
-Em Linux/macOS, ative o ambiente com `source .venv/bin/activate`. Também pode
-executar o Python do ambiente diretamente, sem o ativar.
+Se o comando `python` não estiver disponível e tiver o Python Launcher
+instalado, use `py -3 -m venv .venv` no primeiro comando. Os comandos seguintes
+usam diretamente o Python do ambiente, sem precisar de o ativar.
+
+Nas próximas execuções, basta abrir o terminal na pasta do projeto e correr:
+
+```powershell
+.\.venv\Scripts\python.exe main.py
+```
+
+### Linux e macOS
+
+Na primeira execução:
+
+```bash
+python3 -m venv .venv
+./.venv/bin/python -m pip install -r requirements.txt
+./.venv/bin/python main.py
+```
+
+Nas próximas execuções, na pasta do projeto:
+
+```bash
+./.venv/bin/python main.py
+```
+
+### Executável para Windows
+
+Também pode abrir `BeliefBasesProgram-refatorado.exe`, disponível na raiz
+do projeto, sem instalar Python. No PowerShell, execute:
+
+```powershell
+.\BeliefBasesProgram-refatorado.exe
+```
+
+O executável contém a versão do código usada quando foi gerado. Após alterar
+o código-fonte, siga as instruções de geração de um novo executável abaixo.
+
+### Ficheiros de dependências
+
+Se a instalação apresentar `No module named pip`, instale o pip no ambiente
+e repita o comando de instalação das dependências. Em Windows:
+
+```powershell
+.\.venv\Scripts\python.exe -m ensurepip --upgrade
+```
+
+Em Linux/macOS, use `./.venv/bin/python -m ensurepip --upgrade`.
 
 As dependências estão separadas por finalidade:
 
@@ -80,14 +138,18 @@ introduzidos numa fórmula, são procurados como nomes de variáveis no contexto
 
 ## Utilização no terminal
 
-Ao executar `python main.py`:
+Depois de iniciar a aplicação com o comando indicado acima:
 
 1. Introduza uma base A com sentenças separadas por vírgulas. As chavetas são
    opcionais: `{p, p -> q, q, r}`.
 2. Introduza a fórmula a contrair, por exemplo `q`.
 3. Consulte os kernels, os remainders e os resultados dos operadores.
-4. Use o menu para contrair outra fórmula com a mesma base, selecionar um
-   limite inferior B, começar com uma nova base ou terminar.
+4. Use o menu: `1` contrai outra fórmula com a mesma base; `2` seleciona um
+   limite inferior B; `3` começa com uma nova base; `0` termina a sessão.
+
+Por exemplo, introduza `{p, p -> q, q, r}` quando for pedida a base e `q`
+quando for pedida a fórmula alvo. Depois de consultar os resultados, escolha
+`0` e prima Enter para fechar o programa.
 
 A interface exige uma base **não vazia** e infere o contexto de variáveis
 apenas a partir das sentenças de A. A fórmula alvo só pode usar essas variáveis;
@@ -187,8 +249,6 @@ para comparar conjuntos.
 ├── requirements.txt
 ├── requirements-dev.txt
 ├── requirements-build.txt
-├── pyproject.toml
-├── REFATORACAO.md
 ├── RelatorioBelifBases.pdf
 └── BeliefBasesProgram-refatorado.exe
 ```
@@ -216,26 +276,22 @@ Estão disponíveis partial meet, full meet, kernel, smooth kernel, basic
 AGM-generated base contraction e bounded contraction (contração limitada),
 além da família de resultados possíveis de base contraction. A fundamentação
 e as convenções matemáticas seguem o [PDF original](RelatorioBelifBases.pdf).
-As diferenças entre refatorizações e correções de comportamento ficam
-registadas em [REFATORACAO.md](REFATORACAO.md).
 
 ## Desenvolvimento
 
 ```powershell
-python -m pip install -r requirements-dev.txt
-python -m ruff check .
-python -m ruff format --check .
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m ruff check --target-version py310 --line-length 88 --select E,F,I,UP,B main.py belief_bases scripts
+.\.venv\Scripts\python.exe -m ruff format --check --target-version py310 --line-length 88 main.py belief_bases scripts
 ```
 
-A validação matemática e as sessões de terminal executadas durante a
-refatorização estão registadas em [REFATORACAO.md](REFATORACAO.md).
-A suíte de testes foi posteriormente removida a pedido e não é distribuída
-com o projeto.
+Em Linux/macOS, substitua `.\.venv\Scripts\python.exe` por
+`./.venv/bin/python` nos comandos de desenvolvimento.
 
 Para medir uma análise de seis premissas e a seleção posterior de B:
 
 ```powershell
-python -m scripts.benchmark_analise
+.\.venv\Scripts\python.exe -m scripts.benchmark_analise
 ```
 
 O script apresenta tempos e contagens de chamadas a `Solver.check`. Os
@@ -245,11 +301,12 @@ resultados.
 
 ## Gerar um executável
 
-No sistema de destino, com o ambiente Python ativo:
+No sistema de destino, com o ambiente virtual já criado, use o respetivo
+Python. Em Windows (PowerShell):
 
 ```powershell
-python -m pip install -r requirements-build.txt
-python -m PyInstaller --clean --onefile --collect-binaries z3 --name BeliefBasesProgram-refatorado main.py
+.\.venv\Scripts\python.exe -m pip install -r requirements-build.txt
+.\.venv\Scripts\python.exe -m PyInstaller --clean --onefile --collect-binaries z3 --name BeliefBasesProgram-refatorado main.py
 ```
 
 Em Windows, o novo executável será gerado em
@@ -258,8 +315,6 @@ executável validado na raiz. Após alterações ao código-fonte, gere um novo
 executável para o atualizar. A opção `--collect-binaries z3` inclui as
 bibliotecas nativas do Z3, necessárias para carregar o motor de inferência.
 Confirme o arranque e uma análise completa no executável gerado.
-O estado da validação do empacotamento está documentado em
-[REFATORACAO.md](REFATORACAO.md).
 
 Referência da ferramenta: [manual oficial do PyInstaller](https://pyinstaller.org/en/latest/).
 
